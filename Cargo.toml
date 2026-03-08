@@ -1,0 +1,17 @@
+[package]
+name = "te-challenge"
+version = "0.1.0"
+edition = "2024"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+debug = false
+panic = "abort"
+strip = true
+
+[dependencies]
+rust_decimal = { version = "1.40.0", features = ["serde"] }
+csv = "1.4.0"
+serde = { version = "1.0.228", features = ["derive"] }

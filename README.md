@@ -15,7 +15,7 @@ cargo test
 Amounts are stored as `rust_decimal::Decimal` rather than `f64`. Floating point
 arithmetic is unsuitable for financial systems and will lead to rounding errors
 that compound over many transactions. An alternative would be storing values as
-integers in their smallest unit (e.g. cents).
+integers in their smallest unit (e.g. cents) if the runtime overhead of `rust_decimal` is not deemed acceptable.
 
 ### Streaming
 The engine streams the CSV file row by row via `BufReader` rather than loading
@@ -48,10 +48,14 @@ the caller to decide whether to retry, skip, or fail. The current approach of
 logging and continuing is a deliberate simplification for this toy engine.
 
 
+### Testing Strategy
+Business logic is verified through behavioural tests where each test describes a specific
+scenario and asserts the resulting account state. We do not test for type correctness because the Rust compiler enforces these guarantees at
+compile time.
+
 ## Assumptions
 
-The spec leaves several cases undefined. We make the following assumptions,
-modelled on how a real bank would behave:
+The spec leaves several cases undefined. We make the following assumptions:
 
 **Locked accounts reject all transactions.**
 The spec says accounts are frozen after a chargeback but does not define frozen
@@ -71,4 +75,5 @@ not allow funds to go negative silently.
 
 **Only the owning client can dispute a transaction.**
 A dispute referencing a transaction belonging to a different client is silently
-ignored. This prevents clients from disputing each other's transactions.
+ignored. This prevents clients from disputing each other's transactions (bad actor).
+

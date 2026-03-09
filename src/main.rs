@@ -10,7 +10,7 @@ mod transaction;
 fn main() {
     let file_path = read_file_path();
     let reader = open_file(&file_path);
-    let accounts = engine::process_csv(reader);
+    let accounts = engine::process_transactions(reader);
     engine::output_statement(&accounts);
 }
 

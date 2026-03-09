@@ -411,4 +411,16 @@ mod tests {
         assert_eq!(account.total(), Decimal::new(60_0000, 4));
         assert!(!account.locked());
     }
+
+    // Verifies that whitespace is handled correctly
+    #[test]
+    fn test_csv_whitespace_trimming() {
+        let accounts = process_transactions(
+            "type, client  , tx, amount\ndeposit, 1, 1  , 100.0".as_bytes()
+        );
+        let account = accounts.get(&1).unwrap();
+        assert_eq!(account.available(), Decimal::new(100_0000, 4));
+        assert_eq!(account.total(), Decimal::new(100_0000, 4));
+        assert!(!account.locked());
+    }
 }

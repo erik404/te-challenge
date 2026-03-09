@@ -18,9 +18,11 @@ that compound over many transactions. An alternative would be storing values as
 integers in their smallest unit (e.g. cents) if the runtime overhead of `rust_decimal` is not deemed acceptable.
 
 ### Streaming
-The engine streams the CSV file row by row via `BufReader` rather than loading
-the entire file into memory. This means memory usage is proportional to the number
-of unique clients and transactions, not the size of the input file.
+The entry point in `main.rs` wraps the input file in a `BufReader`, streaming
+transactions row by row rather than loading the entire file into memory.
+
+`process_transactions` is generic over `R: std::io::Read`, meaning the engine can
+process transactions from any source like a file, a TCP stream, or an in-memory buffer without any changes to the core logic.
 
 ### Memory Bounds
 Client accounts and the transaction ledger are held in memory as `HashMap`s.
@@ -43,7 +45,7 @@ wrapped in `#[cfg(debug_assertions)]` so they are compiled out entirely in relea
 builds.
 
 In a production grade system, errors would be propagated up the call stack using
-distinguished error types, for example via `thiserror` or `anyhow` allowing
+distinguished error types, for example via `thiserror` or `anyhow`/`eyre` allowing
 the caller to decide whether to retry, skip, or fail. The current approach of
 logging and continuing is a deliberate simplification for this toy engine.
 

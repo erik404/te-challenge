@@ -348,7 +348,6 @@ mod tests {
                 .as_bytes(),
         );
         let account = accounts.get(&1).unwrap();
-        // dispute should be ignored, balance unchanged
         assert_eq!(account.available(), Decimal::new(10_0000, 4));
         assert_eq!(account.held(), Decimal::ZERO);
         assert_eq!(account.total(), Decimal::new(10_0000, 4));

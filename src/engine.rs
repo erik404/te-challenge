@@ -414,7 +414,7 @@ mod tests {
 
     // Verifies that whitespace is handled correctly
     #[test]
-    fn test_csv_whitespace_trimming() {
+    fn test_whitespace_trimming() {
         let accounts = process_transactions(
             "type, client  , tx, amount\ndeposit, 1, 1  , 100.0".as_bytes()
         );
